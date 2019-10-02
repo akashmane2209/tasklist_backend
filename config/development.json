@@ -1,0 +1,8 @@
+{
+  "db": {
+    "connection-string": "mongodb://localhost:27017/tasklist"
+  },
+  "JWT": {
+    "OPTIONAL_SECRET_KEY": "12345678"
+  }
+}
