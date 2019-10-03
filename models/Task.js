@@ -3,16 +3,18 @@ const mongoose = require("mongoose");
 
 const validateTask = task => {
   const schema = Joi.object().keys({
+    title: Joi.string().required(),
     assignedTo: Joi.string().required(),
     startDate: Joi.date().required(),
     dueDate: Joi.date().required(),
     priority: Joi.string().required(),
     projectId: Joi.string().required()
   });
-  return Joi.validate(task, schema);
+  return schema.validate(task);
 };
 
 const taskSchema = new mongoose.Schema({
+  title: { type: String, required: true },
   assignedTo: [{ type: mongoose.Schema.ObjectId, ref: "user" }],
   startDate: { type: Date, required: true },
   dueDate: { type: Date, required: true },

@@ -11,7 +11,7 @@ const validateUser = user => {
       .required(),
     password: Joi.string().required()
   });
-  return Joi.validate(user, schema);
+  return schema.validate(user);
 };
 
 const userSchema = new mongoose.Schema({
@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
   projectList: [{ type: mongoose.Schema.ObjectId, ref: "project" }]
 });
 
-userSchema.pre("save", async next => {
+userSchema.pre("save", async function(next) {
   try {
     const salt = await bcyrpt.genSalt(10);
     const hashedPassword = await bcyrpt.hash(this.password, salt);

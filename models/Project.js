@@ -9,18 +9,23 @@ const validateProject = project => {
     dueDate: Joi.date().required(),
     workspaceId: Joi.string().required()
   });
-  return Joi.validate(project, schema);
+  return schema.validate(project);
 };
 
-const projectSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  teamId: { type: mongoose.Schema.ObjectId, ref: "team" },
-  startDate: { type: Date, required: true },
-  dueDate: { type: Date, required: true },
-  workspaceId: { type: mongoose.Schema.ObjectId, ref: "workspace" },
-  flag: { type: String },
-  taskList: [{ type: mongoose.Schema.ObjectId, ref: "task" }]
-});
+const projectSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    teamId: { type: mongoose.Schema.ObjectId, ref: "team" },
+    startDate: { type: Date, required: true },
+    dueDate: { type: Date, required: true },
+    workspaceId: { type: mongoose.Schema.ObjectId, ref: "workspace" },
+    flag: { type: String },
+    taskList: [{ type: mongoose.Schema.ObjectId, ref: "task" }]
+  },
+  {
+    timestamps: true
+  }
+);
 
 const Project = mongoose.model("project", projectSchema);
 

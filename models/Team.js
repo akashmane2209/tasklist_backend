@@ -7,7 +7,7 @@ const validateTeam = team => {
     membersList: Joi.array().required(),
     projectId: Joi.string()
   });
-  return Joi.validate(team, schema);
+  return schema.validate(team);
 };
 
 const teamSchema = new mongoose.Schema({
