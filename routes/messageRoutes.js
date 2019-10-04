@@ -18,4 +18,11 @@ router
     messageController.addMessage
   );
 
+router
+  .route("/task/:taskId")
+  .get(
+    passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
+    messageController.getMessagesByTaskId
+  );
+
 module.exports = router;

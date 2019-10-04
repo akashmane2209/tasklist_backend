@@ -19,4 +19,11 @@ router
     taskController.addTask
   );
 
+router
+  .route("/user/:userId")
+  .get(
+    passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
+    taskController.getTasksByUserId
+  );
+
 module.exports = router;

@@ -44,3 +44,16 @@ exports.getAllMessages = async (req, res) => {
     console.log("ERROR:", error.message);
   }
 };
+
+exports.getMessagesByTaskId = async (req, res) => {
+  try {
+    const messages = await Message.find({ taskId: req.params.taskId });
+    if (messages.length == 0) {
+      return res.status(404).json({ message: "No messages found" });
+    }
+    res.status(200).json({ messages });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error." });
+    console.log("ERROR:", error.message);
+  }
+};
