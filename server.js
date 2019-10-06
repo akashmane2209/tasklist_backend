@@ -24,6 +24,7 @@ const http = require("http").createServer(app);
 app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParse.urlencoded({ extended: true }));
+app.use(bodyParse.json({ extended: true }));
 
 //Routes
 app.get("/", async (req, res) => {

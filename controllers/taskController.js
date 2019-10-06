@@ -42,14 +42,14 @@ exports.addTask = async (req, res) => {
     }
     let flag = "";
     if (currentDate > startDate && currentDate < dueDate) {
-      flag = "Ongoing";
+      flag = 2;
     } else if (currentDate > dueDate) {
-      flag = "Delayed";
+      flag = 3;
     } else if (currentDate < startDate) {
-      flag = "Pending";
+      flag = 1;
     }
 
-    const task = await new Task({
+    let task = await new Task({
       title,
       assignedTo,
       startDate,
@@ -68,6 +68,7 @@ exports.addTask = async (req, res) => {
         taskList: task._id
       }
     });
+    task = await Task.findById(task._id).populate("assignedTo");
     res.status(201).json({ task });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error." });
@@ -77,7 +78,9 @@ exports.addTask = async (req, res) => {
 
 exports.getAllTasks = async (req, res) => {
   try {
-    const tasks = await Task.find();
+    const tasks = await Task.find()
+      .populate("assignedTo")
+      .populate("messageList");
     res.status(200).json({ tasks });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error." });
@@ -87,11 +90,33 @@ exports.getAllTasks = async (req, res) => {
 
 exports.getTasksByUserId = async (req, res) => {
   try {
-    const tasks = await Task.find({ assignedTo: req.params.userId });
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const tasks = await Task.find({ assignedTo: req.params.userId }).populate(
+      "projectId"
+    );
     if (tasks.length == 0) {
       return res.status(404).json({ message: "No tasks found" });
     }
     res.status(200).json({ tasks });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error." });
+    console.log("ERROR:", error.message);
+  }
+};
+
+exports.updateTaskFlag = async (req, res) => {
+  try {
+    const task = await Task.findByIdAndUpdate(req.params.id, {
+      flag: 0,
+      priority: "Completed"
+    });
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    res.status(200).json({ message: "Update Successful" });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error." });
     console.log("ERROR:", error.message);

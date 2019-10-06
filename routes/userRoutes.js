@@ -31,4 +31,11 @@ router
     userController.loginUser
   );
 
+router
+  .route("/team/:teamId")
+  .get(
+    passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
+    userController.getUserByTeamId
+  );
+
 module.exports = router;

@@ -16,7 +16,7 @@ router
   )
   .get(
     passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
-    userChecker.checkUser,
+    // userChecker.checkUser,
     projectController.getAllProjects
   );
 
@@ -30,6 +30,13 @@ router
     passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
     userChecker.checkUser,
     projectController.updateProjectById
+  );
+
+router
+  .route("/team/:teamId")
+  .get(
+    passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
+    projectController.getProjectsByTeamId
   );
 
 module.exports = router;

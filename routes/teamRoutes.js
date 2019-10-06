@@ -12,8 +12,7 @@ router
     teamController.getAllTeams
   )
   .post(
-    passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
-    userChecker.checkUser,
+    // passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
     teamController.addTeam
   );
 

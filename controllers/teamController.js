@@ -12,6 +12,13 @@ exports.addTeam = async (req, res) => {
       title,
       membersList
     }).save();
+    membersList.forEach(async member => {
+      await User.findByIdAndUpdate(member, {
+        $push: {
+          teamList: newTeam._id
+        }
+      });
+    });
     const team = await Team.populate(newTeam, {
       path: "membersList",
       select: "firstName lastName"
@@ -55,36 +62,51 @@ exports.updateTeam = async (req, res) => {
 
     if (update == "user") {
       const { userId } = req.body;
-      let user = await User.find(userId);
+      console.log(userId);
+      let user = await User.findById(userId);
       if (!user) {
         return res.status(404).json({ message: "User does not exists" });
       }
-      const team = await Team.findByIdAndUpdate(req.params.id, {
-        $push: {
-          membersList: userId
+      if (user.teamId) {
+        return res.status(200).json({ message: "User already part of a team" });
+      }
+      const team = await Team.findByIdAndUpdate(
+        req.params.id,
+        {
+          $push: {
+            membersList: userId
+          }
+        },
+        {
+          new: true
         }
-      });
+      );
+      console.log(team);
       user = await User.findByIdAndUpdate(userId, {
-        $push: {
-          teamList: team._id
-        }
+        teamId: team._id
       });
+      res.status(200).json({ team });
     } else if (update == "project") {
       const { projectId } = req.body;
       let project = await Project.find(userId);
       if (!project) {
         return res.status(404).json({ message: "Project does not exists" });
       }
-      const team = await Team.findByIdAndUpdate(req.params.id, {
-        $push: {
-          projectList: projectId
-        }
-      });
+      const team = await Team.findByIdAndUpdate(
+        req.params.id,
+        {
+          $push: {
+            projectList: projectId
+          }
+        },
+        { new: true }
+      );
+
       project = await User.findByIdAndUpdate(projectId, {
         teamId: team._id
       });
+      res.status(200).json({ team });
     }
-    res.status(200).json({ message: "Team updated successfully" });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error." });
     console.log("ERROR:", error.message);

@@ -15,7 +15,7 @@ router
   )
   .post(
     passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
-    userChecker.checkUser,
+    // userChecker.checkUser,
     taskController.addTask
   );
 
@@ -26,4 +26,5 @@ router
     taskController.getTasksByUserId
   );
 
+router.route("/:id").put(taskController.updateTaskFlag);
 module.exports = router;

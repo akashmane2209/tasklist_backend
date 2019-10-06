@@ -4,8 +4,7 @@ const { Team } = require("../models/Team");
 exports.getAllWorkspaces = async (req, res) => {
   try {
     const workspaces = await Workspace.find().populate({
-      path: "projectList",
-      select: "title"
+      path: "projectList"
     });
     if (!workspaces) {
       return res.status(404).json({ message: "No workspaces created" });

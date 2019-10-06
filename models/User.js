@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  teamList: [{ type: mongoose.Schema.ObjectId, ref: "team" }],
+  teamId: { type: mongoose.Schema.ObjectId, ref: "team" },
   taskList: [{ type: mongoose.Schema.ObjectId, ref: "task" }],
   projectList: [{ type: mongoose.Schema.ObjectId, ref: "project" }]
 });

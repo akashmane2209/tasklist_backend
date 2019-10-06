@@ -7,7 +7,8 @@ const validateProject = project => {
     teamId: Joi.string().required(),
     startDate: Joi.date().required(),
     dueDate: Joi.date().required(),
-    workspaceId: Joi.string().required()
+    workspaceId: Joi.string().required(),
+    userId: Joi.string().required()
   });
   return schema.validate(project);
 };
@@ -19,6 +20,7 @@ const projectSchema = new mongoose.Schema(
     startDate: { type: Date, required: true },
     dueDate: { type: Date, required: true },
     workspaceId: { type: mongoose.Schema.ObjectId, ref: "workspace" },
+    userId: { type: mongoose.Schema.ObjectId, ref: "user" },
     flag: { type: String },
     taskList: [{ type: mongoose.Schema.ObjectId, ref: "task" }]
   },

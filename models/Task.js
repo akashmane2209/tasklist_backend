@@ -20,7 +20,7 @@ const taskSchema = new mongoose.Schema({
   dueDate: { type: Date, required: true },
   projectId: { type: mongoose.Schema.ObjectId, ref: "project" },
   priority: { type: String, required: true },
-  flag: { type: String },
+  flag: { type: Number },
   messageList: [{ type: mongoose.Schema.ObjectId, ref: "message" }]
 });
 

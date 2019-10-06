@@ -29,14 +29,16 @@ exports.loginUser = async (req, res) => {
   try {
     // if we reach here means user is valid from passport
     const user = req.user;
+    const logged = await User.findById(user._id).populate({
+      path: "teamId",
+      model: "team"
+    });
+    console.log(logged);
+    // console.log(user);
     const token = generateToken(user);
     res.status(200).json({
       token,
-      user: {
-        _id: user._id,
-        email: user.email,
-        name: user.name
-      }
+      user
     });
   } catch (e) {
     console.log(e);
@@ -56,11 +58,24 @@ exports.getAllUsers = async (req, res) => {
 
 exports.getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id).populate("teamId");
     if (!user) {
       return res.status(404).json({ message: "User does not exists!" });
     }
     res.status(200).json({ user });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+    console.log("ERROR:", error.message);
+  }
+};
+
+exports.getUserByTeamId = async (req, res) => {
+  try {
+    const users = await User.find({ teamId: req.params.teamId });
+    if (users.length == 0) {
+      return res.status(404).json({ message: "No users found" });
+    }
+    res.status(200).json({ users });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
     console.log("ERROR:", error.message);
