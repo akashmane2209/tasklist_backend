@@ -12,6 +12,25 @@ exports.addProject = async (req, res) => {
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
+    const seconds = Date.now();
+    const currentDate = new Date(seconds);
+    console.log(currentDate);
+    console.log(startDate);
+    if (startDate < currentDate) {
+      return res
+        .status(200)
+        .json({ message: "Start Date should be greater than current date" });
+    }
+    if (dueDate < currentDate) {
+      return res
+        .status(200)
+        .json({ message: "Due Date should be greater than current date" });
+    }
+    if (dueDate <= startDate) {
+      return res
+        .status(200)
+        .json({ message: "Due Date should be greater than start date" });
+    }
     const { title, teamId, workspaceId, userId } = req.body;
     let team = await Team.findById(teamId);
     if (!team) {
@@ -25,6 +44,7 @@ exports.addProject = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User does not exists" });
     }
+
     let project = await new Project({
       title,
       teamId,

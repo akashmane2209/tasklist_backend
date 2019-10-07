@@ -27,17 +27,17 @@ exports.addTask = async (req, res) => {
     console.log(startDate);
     if (startDate < currentDate) {
       return res
-        .status(401)
+        .status(200)
         .json({ message: "Start Date should be greater than current date" });
     }
     if (dueDate < currentDate) {
       return res
-        .status(401)
+        .status(200)
         .json({ message: "Due Date should be greater than current date" });
     }
     if (dueDate <= startDate) {
       return res
-        .status(401)
+        .status(200)
         .json({ message: "Due Date should be greater than start date" });
     }
     let flag = "";
@@ -94,9 +94,9 @@ exports.getTasksByUserId = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const tasks = await Task.find({ assignedTo: req.params.userId }).populate(
-      "projectId"
-    );
+    const tasks = await Task.find({ assignedTo: req.params.userId })
+      .populate("projectId")
+      .populate("assignedTo");
     if (tasks.length == 0) {
       return res.status(404).json({ message: "No tasks found" });
     }

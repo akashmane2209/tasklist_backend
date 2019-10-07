@@ -7,8 +7,8 @@ const teamController = require("../controllers/teamController");
 router
   .route("/")
   .get(
-    passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
-    userChecker.checkUser,
+    // passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
+    // userChecker.checkUser,
     teamController.getAllTeams
   )
   .post(

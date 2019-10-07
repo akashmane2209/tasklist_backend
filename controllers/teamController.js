@@ -14,9 +14,7 @@ exports.addTeam = async (req, res) => {
     }).save();
     membersList.forEach(async member => {
       await User.findByIdAndUpdate(member, {
-        $push: {
-          teamList: newTeam._id
-        }
+        teamId: newTeam._id
       });
     });
     const team = await Team.populate(newTeam, {

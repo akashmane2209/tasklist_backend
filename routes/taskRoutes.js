@@ -9,8 +9,8 @@ const taskController = require("../controllers/taskController");
 router
   .route("/")
   .get(
-    passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
-    userChecker.checkUser,
+    // passport.authenticate(passportConfig.STRATEGY_JWT, { session: false }),
+    // userChecker.checkUser,
     taskController.getAllTasks
   )
   .post(
