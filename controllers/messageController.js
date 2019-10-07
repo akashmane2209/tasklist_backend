@@ -18,7 +18,7 @@ exports.addMessage = async (req, res) => {
     if (!task) {
       return res.status(404).json({ message: "Task does not exists" });
     }
-    const message = await new Message({
+    let message = await new Message({
       content,
       userId,
       taskId
@@ -28,6 +28,7 @@ exports.addMessage = async (req, res) => {
         messageList: message._id
       }
     });
+    message = await Message.findById(message._id).populate("userId");
     res.status(201).json({ message });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error." });
@@ -37,7 +38,7 @@ exports.addMessage = async (req, res) => {
 
 exports.getAllMessages = async (req, res) => {
   try {
-    const messages = await Message.find();
+    const messages = await Message.find().populate("userId");
     res.status(200).json({ messages });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error." });
